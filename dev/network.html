@@ -16,12 +16,15 @@
     <a onclick="getFetch()" href="javascript:;" class="weui_btn weui_btn_default">getFetch</a>
     <a onclick="postFetch()" href="javascript:;" class="weui_btn weui_btn_default">postFetch</a>
     <a onclick="postFetchByRequest()" href="javascript:;" class="weui_btn weui_btn_default">postFetchByRequest</a>
+    <a onclick="testUpdateRequest()" href="javascript:;" class="weui_btn weui_btn_default">testUpdateRequest</a>
   </div>
 </body>
 </html>
 
 <script>
-window.vConsole = new window.VConsole();
+window.vConsole = new window.VConsole({
+  root: document.body,
+});
 
 function postAjax() {
   console.info('postAjax() Start, response should be logged after End');
@@ -39,6 +42,26 @@ function postAjax() {
     console.log('postAjax Error');
   };
   console.info('postAjax() End');
+}
+
+function testUpdateRequest () {
+  const arr = [
+    { "id": "da7667c6-2c97-487b-91f5-7120a18d8989", "data": { "readyState": 1, "status": 0, "responseType": "", "startTime": 1612349376550 } },
+    { "id": "da7667c6-2c97-487b-91f5-7120a18d8989", "data": { "readyState": 1, "status": 0, "responseType": "", "startTime": 1612349376550, "requestHeader": { "custom-header": "foobar" }, "method": "GET", "url": "./data/success.json?type=xhr&id=0.03100509611883262", "name": "success.json?type=xhr&id=0.03100509611883262", "getData": { "type": "xhr", "id": "0.03100509611883262" } } },
+    { "id": "da7667c6-2c97-487b-91f5-7120a18d8989", "data": { "readyState": 2, "status": 200, "responseType": "", "startTime": 1612349376550, "requestHeader": { "custom-header": "foobar" }, "method": "GET", "url": "./data/success.json?type=xhr&id=0.03100509611883262", "name": "success.json?type=xhr&id=0.03100509611883262", "getData": { "type": "xhr", "id": "0.03100509611883262" }, "header": { "accept-ranges": "bytes\r", "cache-control": "public, max-age=0\r", "connection": "keep-alive\r", "content-length": "21\r", "content-type": "application/json; charset=UTF-8\r", "date": "Wed, 03 Feb 2021 10:49:36 GMT\r", "etag": "W/\"15-17747ff088c\"\r", "last-modified": "Thu, 28 Jan 2021 07:57:12 GMT\r", "x-powered-by": "Express\r" } } },
+    { "id": "da7667c6-2c97-487b-91f5-7120a18d8989", "data": { "readyState": 3, "status": 200, "responseType": "", "startTime": 1612349376550, "requestHeader": { "custom-header": "foobar" }, "method": "GET", "url": "./data/success.json?type=xhr&id=0.03100509611883262", "name": "success.json?type=xhr&id=0.03100509611883262", "getData": { "type": "xhr", "id": "0.03100509611883262" }, "header": { "accept-ranges": "bytes\r", "cache-control": "public, max-age=0\r", "connection": "keep-alive\r", "content-length": "21\r", "content-type": "application/json; charset=UTF-8\r", "date": "Wed, 03 Feb 2021 10:49:36 GMT\r", "etag": "W/\"15-17747ff088c\"\r", "last-modified": "Thu, 28 Jan 2021 07:57:12 GMT\r", "x-powered-by": "Express\r" } } },
+    { "id": "da7667c6-2c97-487b-91f5-7120a18d8989", "data": { "readyState": 4, "status": 200, "responseType": "", "startTime": 1612349376550, "requestHeader": { "custom-header": "foobar" }, "method": "GET", "url": "./data/success.json?type=xhr&id=0.03100509611883262", "name": "success.json?type=xhr&id=0.03100509611883262", "getData": { "type": "xhr", "id": "0.03100509611883262" }, "header": { "accept-ranges": "bytes\r", "cache-control": "public, max-age=0\r", "connection": "keep-alive\r", "content-length": "21\r", "content-type": "application/json; charset=UTF-8\r", "date": "Wed, 03 Feb 2021 10:49:36 GMT\r", "etag": "W/\"15-17747ff088c\"\r", "last-modified": "Thu, 28 Jan 2021 07:57:12 GMT\r", "x-powered-by": "Express\r" }, "endTime": 1612349376560, "costTime": 10, "response": "{\"ret\":0,\"msg\":\"suc\"}" } },
+  ]
+  let index = 0
+  const timer = setInterval(() => {
+    const item = arr[index]
+    if (!arr.index) {
+      clearInterval(timer)
+      return
+    }
+    window.vConsole.pluginList.network.updateRequest(item.id, item.data)
+    index++
+  }, 1000)
 }
 
 function getAjax() {

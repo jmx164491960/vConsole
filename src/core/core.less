@@ -98,54 +98,57 @@
   }
 
   .vc-panel {
-    display: none;
-    position: fixed;
-    min-height: 85%;
+    // display: none;
+    // position: fixed;
+    // min-height: 85%;
+    height: 100%;
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 10002;
-    background-color: var(--VC-BG-0);
-    -webkit-transition: -webkit-transform .3s;
-    transition: -webkit-transform .3s;
-    transition: transform .3s;
-    transition: transform .3s, -webkit-transform .3s;
+    // z-index: 10002;
+    // background-color: var(--VC-BG-0);
+    // -webkit-transition: -webkit-transform .3s;
+    // transition: -webkit-transform .3s;
+    // transition: transform .3s;
+    // transition: transform .3s, -webkit-transform .3s;
 
-    -webkit-transform: translate(0, 100%);
-    transform: translate(0, 100%);
+    // -webkit-transform: translate(0, 100%);
+    // transform: translate(0, 100%);
   }
 
-  .vc-tabbar {
-    border-bottom: 1px solid var(--VC-FG-3);
-    overflow-x: auto;
-    height: 39em / @font;
-    width: auto;
-    white-space: nowrap;
+  // .vc-tabbar {
+  //   border-bottom: 1px solid var(--VC-FG-3);
+  //   overflow-x: auto;
+  //   height: 39em / @font;
+  //   width: auto;
+  //   white-space: nowrap;
 
-    .vc-tab {
-      display: inline-block;
-      line-height: 39em / @font;
-      padding: 0 15em / @font;
-      border-right: 1px solid var(--VC-FG-3);
-      text-decoration: none;
-      color: var(--VC-FG-0);
-      -webkit-tap-highlight-color: transparent;
-      -webkit-touch-callout: none;
-    }
-    .vc-tab:active {
-      background-color: rgba(0,0,0,0.15);
-    }
-    .vc-tab.vc-actived {
-      background-color: var(--VC-BG-1);
-    }
-  }
+  //   .vc-tab {
+  //     display: inline-block;
+  //     line-height: 39em / @font;
+  //     padding: 0 15em / @font;
+  //     border-right: 1px solid var(--VC-FG-3);
+  //     text-decoration: none;
+  //     color: var(--VC-FG-0);
+  //     -webkit-tap-highlight-color: transparent;
+  //     -webkit-touch-callout: none;
+  //   }
+  //   .vc-tab:active {
+  //     background-color: rgba(0,0,0,0.15);
+  //   }
+  //   .vc-tab.vc-actived {
+  //     background-color: var(--VC-BG-1);
+  //   }
+  // }
 
   .vc-content {
     background-color: var(--VC-BG-2);
     overflow-x: hidden;
     overflow-y: auto;
     position: absolute;
-    top: 40em / @font;
+    // top: 40em / @font;
+    top: 0;
     left: 0;
     right: 0;
     bottom: 40em / @font;
@@ -154,7 +157,7 @@
     margin-bottom: env(safe-area-inset-bottom);
   }
   .vc-content.vc-has-topbar {
-    top: 71em / @font;
+    // top: 71em / @font;
   }
 
   .vc-topbar {

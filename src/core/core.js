@@ -50,7 +50,12 @@ class VConsole {
 
     this.isInited = false;
     this.option = {
-      defaultPlugins: ['system', 'network', 'element', 'storage']
+      defaultPlugins: [
+        // 'system',
+        'network',
+        // 'element',
+        // 'storage'
+      ]
     };
 
     this.activedTab = '';
@@ -77,6 +82,8 @@ class VConsole {
         this.option[key] = opt[key];
       }
     }
+
+    this.root = opt.root
 
     // add built-in plugins
     this._addBuiltInPlugins();
@@ -117,15 +124,15 @@ class VConsole {
    */
   _addBuiltInPlugins() {
     // add default log plugin
-    this.addPlugin(new VConsoleDefaultPlugin('default', 'Log'));
+    // this.addPlugin(new VConsoleDefaultPlugin('default', 'Log'));
 
     // add other built-in plugins according to user's config
     const list = this.option.defaultPlugins;
     const plugins = {
-      'system': {proto: VConsoleSystemPlugin, name: 'System'},
+      // 'system': {proto: VConsoleSystemPlugin, name: 'System'},
       'network': {proto: VConsoleNetworkPlugin, name: 'Network'},
-      'element': {proto: VConsoleElementPlugin, name: 'Element'},
-      'storage': {proto: VConsoleStoragePlugin, name: 'Storage'}
+      // 'element': {proto: VConsoleElementPlugin, name: 'Element'},
+      // 'storage': {proto: VConsoleStoragePlugin, name: 'Storage'}
     };
     if (!!list && tool.isArray(list)) {
       for (let i=0; i<list.length; i++) {
@@ -147,19 +154,23 @@ class VConsole {
     if (! $.one(VCONSOLE_ID)) {
       const e = document.createElement('div');
       e.innerHTML = tpl;
-      document.documentElement.insertAdjacentElement('beforeend', e.children[0]);
+      if (this.root) {
+        this.root.append(e.children[0])
+      } else {
+        document.documentElement.insertAdjacentElement('beforeend', e.children[0]);
+      }
     }
     this.$dom = $.one(VCONSOLE_ID);
 
     // reposition switch button
-    const $switch = $.one('.vc-switch', this.$dom);
-    let switchX = tool.getStorage('switch_x') * 1,
-        switchY = tool.getStorage('switch_y') * 1;
-    [switchX, switchY] = this._getSwitchButtonSafeAreaXY($switch, switchX, switchY);
-    this.switchPos.x = switchX;
-    this.switchPos.y = switchY;
-    $.one('.vc-switch').style.right = switchX + 'px';
-    $.one('.vc-switch').style.bottom = switchY + 'px';
+    // const $switch = $.one('.vc-switch', this.$dom);
+    // let switchX = tool.getStorage('switch_x') * 1,
+    //     switchY = tool.getStorage('switch_y') * 1;
+    // [switchX, switchY] = this._getSwitchButtonSafeAreaXY($switch, switchX, switchY);
+    // this.switchPos.x = switchX;
+    // this.switchPos.y = switchY;
+    // $.one('.vc-switch').style.right = switchX + 'px';
+    // $.one('.vc-switch').style.bottom = switchY + 'px';
 
     // modify font-size
     const dpr = window.devicePixelRatio || 1;
@@ -185,20 +196,20 @@ class VConsole {
    * Get an safe [x, y] position for switch button
    * @private
    */
-  _getSwitchButtonSafeAreaXY($switch, x, y) {
-    const docWidth = Math.max(document.documentElement.offsetWidth, window.innerWidth);
-    const docHeight = Math.max(document.documentElement.offsetHeight, window.innerHeight);
-    // check edge
-    if (x + $switch.offsetWidth > docWidth) {
-      x = docWidth - $switch.offsetWidth;
-    }
-    if (y + $switch.offsetHeight > docHeight) {
-      y = docHeight - $switch.offsetHeight;
-    }
-    if (x < 0) { x = 0; }
-    if (y < 20) { y = 20; } // safe area for iOS Home indicator
-    return [x, y];
-  }
+  // _getSwitchButtonSafeAreaXY($switch, x, y) {
+  //   const docWidth = Math.max(document.documentElement.offsetWidth, window.innerWidth);
+  //   const docHeight = Math.max(document.documentElement.offsetHeight, window.innerHeight);
+  //   // check edge
+  //   if (x + $switch.offsetWidth > docWidth) {
+  //     x = docWidth - $switch.offsetWidth;
+  //   }
+  //   if (y + $switch.offsetHeight > docHeight) {
+  //     y = docHeight - $switch.offsetHeight;
+  //   }
+  //   if (x < 0) { x = 0; }
+  //   if (y < 20) { y = 20; } // safe area for iOS Home indicator
+  //   return [x, y];
+  // }
 
   /**
    * simulate tap event by touchstart & touchend
@@ -284,46 +295,46 @@ class VConsole {
     const that = this;
 
     // drag & drop switch button
-    const $switch = $.one('.vc-switch', that.$dom);
-    $.bind($switch, 'touchstart', function(e) {
-      that.switchPos.startX = e.touches[0].pageX;
-      that.switchPos.startY = e.touches[0].pageY;
-      that.switchPos.hasMoved = false;
-    });
-    $.bind($switch, 'touchend', function(e) {
-      if (!that.switchPos.hasMoved) {
-        return;
-      }
-      that.switchPos.x = that.switchPos.endX;
-      that.switchPos.y = that.switchPos.endY;
-      that.switchPos.startX = 0;
-      that.switchPos.startY = 0;
-      that.switchPos.hasMoved = false;
-      tool.setStorage('switch_x', that.switchPos.x);
-      tool.setStorage('switch_y', that.switchPos.y);
-    });
-    $.bind($switch, 'touchmove', function(e) {
-      if (e.touches.length <= 0) {
-        return;
-      }
-      const offsetX = e.touches[0].pageX - that.switchPos.startX,
-            offsetY = e.touches[0].pageY - that.switchPos.startY;
-      let x = Math.floor(that.switchPos.x - offsetX),
-          y = Math.floor(that.switchPos.y - offsetY);
-      [x, y] = that._getSwitchButtonSafeAreaXY($switch, x, y);
-      $switch.style.right = x + 'px';
-      $switch.style.bottom = y + 'px';
-      that.switchPos.endX = x;
-      that.switchPos.endY = y;
-      that.switchPos.hasMoved = true;
-      console.log(x, y);
-      e.preventDefault();
-    });
+    // const $switch = $.one('.vc-switch', that.$dom);
+    // $.bind($switch, 'touchstart', function(e) {
+    //   that.switchPos.startX = e.touches[0].pageX;
+    //   that.switchPos.startY = e.touches[0].pageY;
+    //   that.switchPos.hasMoved = false;
+    // });
+    // $.bind($switch, 'touchend', function(e) {
+    //   if (!that.switchPos.hasMoved) {
+    //     return;
+    //   }
+    //   that.switchPos.x = that.switchPos.endX;
+    //   that.switchPos.y = that.switchPos.endY;
+    //   that.switchPos.startX = 0;
+    //   that.switchPos.startY = 0;
+    //   that.switchPos.hasMoved = false;
+    //   tool.setStorage('switch_x', that.switchPos.x);
+    //   tool.setStorage('switch_y', that.switchPos.y);
+    // });
+    // $.bind($switch, 'touchmove', function(e) {
+    //   if (e.touches.length <= 0) {
+    //     return;
+    //   }
+    //   const offsetX = e.touches[0].pageX - that.switchPos.startX,
+    //         offsetY = e.touches[0].pageY - that.switchPos.startY;
+    //   let x = Math.floor(that.switchPos.x - offsetX),
+    //       y = Math.floor(that.switchPos.y - offsetY);
+    //   [x, y] = that._getSwitchButtonSafeAreaXY($switch, x, y);
+    //   $switch.style.right = x + 'px';
+    //   $switch.style.bottom = y + 'px';
+    //   that.switchPos.endX = x;
+    //   that.switchPos.endY = y;
+    //   that.switchPos.hasMoved = true;
+    //   console.log(x, y);
+    //   e.preventDefault();
+    // });
 
     // show console panel
-    $.bind($.one('.vc-switch', that.$dom), 'click', function() {
-      that.show();
-    });
+    // $.bind($.one('.vc-switch', that.$dom), 'click', function() {
+    //   that.show();
+    // });
 
     // hide console panel
     $.bind($.one('.vc-hide', that.$dom), 'click', function() {
@@ -351,13 +362,13 @@ class VConsole {
     });
 
     // show tab box
-    $.delegate($.one('.vc-tabbar', that.$dom), 'click', '.vc-tab', function(e) {
-      let tabName = this.dataset.tab;
-      if (tabName == that.activedTab) {
-        return;
-      }
-      that.showTab(tabName);
-    });
+    // $.delegate($.one('.vc-tabbar', that.$dom), 'click', '.vc-tab', function(e) {
+    //   let tabName = this.dataset.tab;
+    //   if (tabName == that.activedTab) {
+    //     return;
+    //   }
+    //   that.showTab(tabName);
+    // });
 
     // after console panel, trigger a transitionend event to make panel's property 'display' change from 'block' to 'none'
     const onPanelTransitionEnd = function(target) {
@@ -464,7 +475,7 @@ class VConsole {
       that.tabList.push(plugin.id);
       // render tabbar
       let $tabbar = $.render(tplTabbar, {id: plugin.id, name: plugin.name});
-      $.one('.vc-tabbar', that.$dom).insertAdjacentElement('beforeend', $tabbar);
+      // $.one('.vc-tabbar', that.$dom).insertAdjacentElement('beforeend', $tabbar);
       // render tabbox
       let $tabbox = $.render(tplTabbox, {id: plugin.id});
       if (!!tabboxHTML) {
@@ -678,13 +689,13 @@ class VConsole {
    * show switch button
    * @public
    */
-  showSwitch() {
-    if (!this.isInited) {
-      return;
-    }
-    let $switch = $.one('.vc-switch', this.$dom);
-    $switch.style.display = 'block';
-  }
+  // showSwitch() {
+  //   if (!this.isInited) {
+  //     return;
+  //   }
+  //   let $switch = $.one('.vc-switch', this.$dom);
+  //   $switch.style.display = 'block';
+  // }
 
   /**
    * hide switch button
@@ -771,11 +782,11 @@ class VConsole {
 
 // export static class
 VConsole.VConsolePlugin = VConsolePlugin;
-VConsole.VConsoleLogPlugin = VConsoleLogPlugin;
-VConsole.VConsoleDefaultPlugin = VConsoleDefaultPlugin;
-VConsole.VConsoleSystemPlugin = VConsoleSystemPlugin;
+// VConsole.VConsoleLogPlugin = VConsoleLogPlugin;
+// VConsole.VConsoleDefaultPlugin = VConsoleDefaultPlugin;
+// VConsole.VConsoleSystemPlugin = VConsoleSystemPlugin;
 VConsole.VConsoleNetworkPlugin = VConsoleNetworkPlugin;
-VConsole.VConsoleElementPlugin = VConsoleElementPlugin;
-VConsole.VConsoleStoragePlugin = VConsoleStoragePlugin;
+// VConsole.VConsoleElementPlugin = VConsoleElementPlugin;
+// VConsole.VConsoleStoragePlugin = VConsoleStoragePlugin;
 
 export default VConsole;
