@@ -1,15 +1,18 @@
 {
-  "name": "vconsole",
+  "name": "vcnetwork",
   "version": "3.4.0",
   "description": "A lightweight, extendable front-end developer tool for mobile web page.",
-  "homepage": "https://github.com/Tencent/vConsole",
-  "main": "dist/vconsole.min.js",
-  "typings": "dist/vconsole.min.d.ts",
+  "homepage": "https://github.com/jmx164491960/vConsole",
+  "main": "dist/vcnetwork.min.js",
+  "typings": "dist/vcnetwork.min.d.ts",
   "scripts": {
     "test": "mocha",
     "build": "webpack",
     "dev": "webpack-dev-server --config webpack.dev.config"
   },
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "console",
     "debug",
@@ -17,7 +20,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Tencent/vConsole.git"
+    "url": "git+https://github.com/jmx164491960/vConsole"
   },
   "dependencies": {
     "mutation-observer": "^1.0.3",
@@ -46,6 +49,5 @@
     "webpack-dev-server": "^3.11.0",
     "webpack-merge": "^4.2.2"
   },
-  "author": "Tencent",
   "license": "MIT"
 }

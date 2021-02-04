@@ -7,7 +7,7 @@
   <link href="../example/lib/weui.min.css" rel="stylesheet"/>
   <link href="../example/lib/demo.css" rel="stylesheet"/>
 
-  <script src="../dist/vconsole.min.js"></script>
+  <script src="../dist/vcnetwork.min.js"></script>
 </head>
 <body ontouchstart>
   <div class="page">
@@ -22,7 +22,7 @@
 </html>
 
 <script>
-window.vConsole = new window.VConsole({
+window.vConsole = new window.VCnetwork({
   root: document.body,
 });
 
@@ -55,7 +55,7 @@ function testUpdateRequest () {
   let index = 0
   const timer = setInterval(() => {
     const item = arr[index]
-    if (!arr.index) {
+    if (!item) {
       clearInterval(timer)
       return
     }
